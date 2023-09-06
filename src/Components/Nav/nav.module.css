@@ -1,0 +1,125 @@
+.navContainer {
+  display: flex;
+  flex-direction: column;
+  width: 30vh;
+  align-items: center;
+  -webkit-backdrop-filter: blur(2px);
+          backdrop-filter: blur(2px);
+  border-radius: 2vh;
+}
+@media only screen and (max-width: 600px) {
+  .navContainer {
+    width: 100%;
+  }
+}
+
+.logo {
+  width: 30vh;
+  height: 40vmin;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+@media only screen and (max-width: 600px) {
+  .logo {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0 2vh;
+    height: 25vmin;
+  }
+}
+
+.me {
+  min-height: 10vh;
+  min-width: 10vh;
+  border-radius: 20vh;
+  width: 27vmin;
+  height: 27vmin;
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+  border-bottom: 2px solid #fff;
+  border-left: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+.me > img {
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  top: -45%;
+  left: -30%;
+}
+@media only screen and (max-width: 600px) {
+  .me {
+    width: 20vmin;
+    height: 20vmin;
+  }
+}
+
+.name {
+  color: #fff;
+  margin-top: 2vh;
+  font-size: 3vh;
+}
+@media only screen and (max-width: 600px) {
+  .name {
+    margin-bottom: 2vh;
+  }
+}
+
+.links {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-items: center;
+  justify-content: space-evenly;
+}
+@media only screen and (max-width: 600px) {
+  .links {
+    flex-direction: row;
+    width: 100%;
+    padding: 1vh;
+  }
+}
+
+.link {
+  text-transform: capitalize;
+  color: #fff;
+  text-decoration: none;
+  font-size: 2.5vmin;
+  position: relative;
+  transition-duration: 500ms;
+}
+.link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1.5vmin;
+  height: 0.5vmin;
+  width: 0%;
+  background: #fff;
+  transition-duration: 200ms;
+  border-radius: 20vh;
+}
+.link:hover::after {
+  width: 100%;
+}
+@media only screen and (max-width: 600px) {
+  .link {
+    font-size: 4vmin;
+  }
+}
+
+.activeLink {
+  color: cyan;
+  transform: scale(1.2);
+  font-weight: bolder;
+}
+.activeLink:hover::after {
+  background: cyan;
+}/*# sourceMappingURL=nav.module.css.map */

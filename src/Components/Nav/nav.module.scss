@@ -1,0 +1,116 @@
+.navContainer {
+  display: flex;
+  flex-direction: column;
+  width: 30vh;
+  align-items: center;
+  backdrop-filter: blur(2px);
+  border-radius: 2vh;
+  @media only screen and (max-width: 600px) {
+    width: 100%;
+    // flex-direction: row;
+  }
+}
+.logo {
+  width: 30vh;
+  height: 40vmin;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  @media only screen and (max-width: 600px) {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0 2vh;
+    height: 25vmin;
+    // flex-direction: row;
+  }
+}
+.me {
+  min-height: 10vh;
+  min-width: 10vh;
+  border-radius: 20vh;
+  width: 27vmin;
+  height: 27vmin;
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid #fff;
+  border-left: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+  & > img {
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    object-fit: cover;
+    top: -45%;
+    left: -30%;
+    // scale: 1.1;
+  }
+  @media only screen and (max-width: 600px) {
+    width: 20vmin;
+    height: 20vmin;
+    // & > img {
+    //   top: -7vh;
+    //   left: -7vh;
+    //   // scale: 1.1;
+    // }
+  }
+}
+
+.name {
+  color: #fff;
+  margin-top: 2vh;
+  font-size: 3vh;
+  @media only screen and (max-width: 600px) {
+    // flex-direction: row;
+    margin-bottom: 2vh;
+  }
+}
+
+.links {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-items: center;
+  justify-content: space-evenly;
+  @media only screen and (max-width: 600px) {
+    flex-direction: row;
+    width: 100%;
+    padding: 1vh;
+  }
+}
+.link {
+  text-transform: capitalize;
+  color: #fff;
+  text-decoration: none;
+  font-size: 2.5vmin;
+  position: relative;
+  transition-duration: 500ms;
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -1.5vmin;
+    height: 0.5vmin;
+    width: 0%;
+    background: #fff;
+    transition-duration: 200ms;
+    border-radius: 20vh;
+  }
+  &:hover::after {
+    width: 100%;
+  }
+  @media only screen and (max-width: 600px) {
+    font-size: 4vmin;
+  }
+}
+
+.activeLink {
+  color: cyan;
+  transform: scale(1.2);
+  font-weight: bolder;
+  &:hover::after {
+    background: cyan;
+  }
+}
