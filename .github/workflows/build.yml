@@ -1,7 +1,8 @@
+name: the cicd workflow
 on: push
 jobs: 
   build-node:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     container: node:16
     steps:
       -run: node --version
