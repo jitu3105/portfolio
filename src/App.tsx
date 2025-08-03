@@ -1,35 +1,32 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import { BackgroundBeams } from "./components/ui/background-beams";
+import { Button } from "./components/ui/button";
+import { ThemeProvider } from "./components/theme-provider";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "./components/ui/card";
+import Footer from "./Footer";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <BackgroundBeams className="pointer-events-none" />
+      <Card className="bg-transparent border-none h-screen p-0">
+        <Card className="border-none rounded-2xl m-4 h-full  backdrop-blur-xs bg-muted/5 ">
+          <CardHeader className="text-4xl">Jalaj Ghuge.</CardHeader>
+          <CardContent className="h-full">HERO</CardContent>
+          <CardFooter>
+            <Footer />
+          </CardFooter>
+        </Card>
+      </Card>
+    </ThemeProvider>
+  );
 }
 
-export default App
+export default App;
