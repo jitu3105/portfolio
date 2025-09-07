@@ -20,7 +20,7 @@ function Footer() {
             className=" hover:text-blue-200 transform hover:scale-105 transition-all duration-200"
           >
             <a
-              href="https://linkedin.com/in/your-profile"
+              href="https://www.linkedin.com/in/jalaj-ghuge-b5bb65129/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn Profile"
@@ -28,7 +28,7 @@ function Footer() {
               <Linkedin className="h-5 w-5" />
             </a>
           </Button>
-          <Button
+          {/* <Button
             variant="ghost"
             size="icon"
             asChild
@@ -42,14 +42,17 @@ function Footer() {
             >
               <Github className="h-5 w-5" />
             </a>
-          </Button>
+          </Button> */}
           <Button
             variant="ghost"
             size="icon"
             asChild
             className="text-white hover:text-blue-200 hover:bg-blue-700 transform hover:scale-105 transition-all duration-200"
           >
-            <a href="mailto:your-email@example.com" aria-label="Email Contact">
+            <a
+              href="mailto:jalajghuge.official@example.com"
+              aria-label="Email Contact"
+            >
               <Mail className="h-5 w-5" />
             </a>
           </Button>
