@@ -20,16 +20,18 @@ function App() {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <BackgroundBeams className="pointer-events-none" />
       <Card className="bg-transparent border-none h-screen p-0 md:p-4">
-        <Card className="border-none rounded-2xl h-full  backdrop-blur-xs bg-muted/5 ">
-          <Tabs defaultValue="about" className=" h-full">
-            <CardHeader className="flex items-cneter justify-between w-full md:w-11/12 md:mx-auto h-1/12">
+        <Card className="border-none rounded-2xl h-full backdrop-blur-xs bg-muted/5 flex flex-col">
+          <Tabs defaultValue="about" className="flex flex-col h-full">
+            <CardHeader className="flex items-center justify-between w-full md:w-11/12 md:mx-auto">
               <h1 className="text-2xl md:text-4xl">Jalaj Ghuge.</h1>
               <TabsList>
                 <TabsTrigger value="about">About</TabsTrigger>
                 <TabsTrigger value="projects">Projects</TabsTrigger>
               </TabsList>
             </CardHeader>
-            <CardContent className="h-9/12">
+
+            {/* THIS IS IMPORTANT */}
+            <CardContent className="flex-1 min-h-0">
               <TabsContent value="about" className="h-full">
                 <About />
               </TabsContent>
@@ -37,7 +39,8 @@ function App() {
                 <Projects />
               </TabsContent>
             </CardContent>
-            <CardFooter className="h-2/12 w-full truncate">
+
+            <CardFooter>
               <Footer />
             </CardFooter>
           </Tabs>
