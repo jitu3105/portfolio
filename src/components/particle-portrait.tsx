@@ -89,8 +89,7 @@ function smoothstep(edge0: number, edge1: number, value: number) {
 
 function smootherstep(edge0: number, edge1: number, value: number) {
   const amount = clamp((value - edge0) / (edge1 - edge0), 0, 1);
-  return amount * amount * amount *
-    (amount * (amount * 6 - 15) + 10);
+  return amount * amount * amount * (amount * (amount * 6 - 15) + 10);
 }
 
 function getSnappedSceneProgress(progress: number, sceneCount: number) {
@@ -129,7 +128,8 @@ function getImageRect(
 
   if (mobile) {
     const imageWidth = width * 0.86;
-    const imageHeight = scene.imageType === "landscape" ? height * 0.38 : height * 0.46;
+    const imageHeight =
+      scene.imageType === "landscape" ? height * 0.38 : height * 0.46;
     return {
       x: (width - imageWidth) / 2,
       y: height * 0.115,
@@ -140,11 +140,13 @@ function getImageRect(
   }
 
   const configuredImageWidth = width * clamp(scene.imageWidth / 100, 0.3, 0.52);
-  const imageHeight = scene.imageType === "landscape" ? height * 0.58 : height * 0.76;
+  const imageHeight =
+    scene.imageType === "landscape" ? height * 0.58 : height * 0.76;
   return {
-    x: scene.imageSide === "left"
-      ? width * 0.055
-      : width - width * 0.055 - configuredImageWidth,
+    x:
+      scene.imageSide === "left"
+        ? width * 0.055
+        : width - width * 0.055 - configuredImageWidth,
     y: (height - imageHeight) / 2 + height * 0.015,
     width: configuredImageWidth,
     height: imageHeight,
@@ -229,7 +231,9 @@ function buildPointsFromImage(
   const sampleCanvas = document.createElement("canvas");
   sampleCanvas.width = columns;
   sampleCanvas.height = rows;
-  const sampleContext = sampleCanvas.getContext("2d", { willReadFrequently: true });
+  const sampleContext = sampleCanvas.getContext("2d", {
+    willReadFrequently: true,
+  });
   if (!sampleContext) return [];
 
   sampleContext.imageSmoothingEnabled = true;
@@ -275,9 +279,7 @@ function buildPointsFromImage(
       (column + 0.5 + noiseX * 0.18) * cellWidth +
       noiseX * edgeScatter;
     const y =
-      rect.y +
-      (row + 0.5 + noiseY * 0.18) * cellHeight +
-      noiseY * edgeScatter;
+      rect.y + (row + 0.5 + noiseY * 0.18) * cellHeight + noiseY * edgeScatter;
     const r = enhanceChannel(pixels[pixelIndex]);
     const g = enhanceChannel(pixels[pixelIndex + 1]);
     const b = enhanceChannel(pixels[pixelIndex + 2]);
@@ -290,11 +292,8 @@ function buildPointsFromImage(
     const visualEdgeBand =
       1 - smoothstep(0.018, 0.305, Math.min(u, 1 - u, v, 1 - v));
     const fragmentNoise = ((index * 47) % 101) / 100;
-    const edgeFragmentVisible = fragmentNoise < lerp(
-      0.52,
-      0.985,
-      visualEdgeBand,
-    );
+    const edgeFragmentVisible =
+      fragmentNoise < lerp(0.52, 0.985, visualEdgeBand);
     const edgeAlpha = edgeFragmentVisible
       ? Math.pow(visualEdgeBand, 0.72) * (0.52 + fragmentNoise * 0.46)
       : 0;
@@ -372,7 +371,7 @@ function buildParticleDetailLayer(
       1,
       alphaLevels - 1,
     );
-    const path = maskPaths[alphaLevel] ??= new Path2D();
+    const path = (maskPaths[alphaLevel] ??= new Path2D());
     path.rect(
       point.tx - rect.x - point.size / 2,
       point.ty - rect.y - point.size / 2,
@@ -429,20 +428,36 @@ function buildEditorialImageLayer(
   const featherX = clamp(logicalWidth * 0.205, 40, 126);
   const featherY = clamp(logicalHeight * 0.165, 38, 106);
   layerContext.globalCompositeOperation = "destination-in";
-  const horizontalMask = layerContext.createLinearGradient(0, 0, logicalWidth, 0);
+  const horizontalMask = layerContext.createLinearGradient(
+    0,
+    0,
+    logicalWidth,
+    0,
+  );
   const horizontalFeather = featherX / logicalWidth;
   horizontalMask.addColorStop(0, "rgba(255,255,255,0)");
   horizontalMask.addColorStop(horizontalFeather * 0.44, "rgba(255,255,255,.3)");
   horizontalMask.addColorStop(horizontalFeather, "rgba(255,255,255,.84)");
   horizontalMask.addColorStop(horizontalFeather * 1.28, "rgba(255,255,255,1)");
-  horizontalMask.addColorStop(1 - horizontalFeather * 1.28, "rgba(255,255,255,1)");
+  horizontalMask.addColorStop(
+    1 - horizontalFeather * 1.28,
+    "rgba(255,255,255,1)",
+  );
   horizontalMask.addColorStop(1 - horizontalFeather, "rgba(255,255,255,.84)");
-  horizontalMask.addColorStop(1 - horizontalFeather * 0.44, "rgba(255,255,255,.3)");
+  horizontalMask.addColorStop(
+    1 - horizontalFeather * 0.44,
+    "rgba(255,255,255,.3)",
+  );
   horizontalMask.addColorStop(1, "rgba(255,255,255,0)");
   layerContext.fillStyle = horizontalMask;
   layerContext.fillRect(0, 0, logicalWidth, logicalHeight);
 
-  const verticalMask = layerContext.createLinearGradient(0, 0, 0, logicalHeight);
+  const verticalMask = layerContext.createLinearGradient(
+    0,
+    0,
+    0,
+    logicalHeight,
+  );
   const verticalFeather = featherY / logicalHeight;
   verticalMask.addColorStop(0, "rgba(255,255,255,0)");
   verticalMask.addColorStop(verticalFeather * 0.44, "rgba(255,255,255,.3)");
@@ -522,9 +537,13 @@ function drawPill(
   context.font = '700 11px "Space Grotesk", sans-serif';
   const width = context.measureText(text).width + 24;
   roundedRect(context, x, y, width, 30, 999);
-  context.fillStyle = accent ? colorWithAlpha(accentColor, 0.17) : "rgba(255,255,255,.055)";
+  context.fillStyle = accent
+    ? colorWithAlpha(accentColor, 0.17)
+    : "rgba(255,255,255,.055)";
   context.fill();
-  context.strokeStyle = accent ? colorWithAlpha(accentColor, 0.42) : "rgba(255,255,255,.1)";
+  context.strokeStyle = accent
+    ? colorWithAlpha(accentColor, 0.42)
+    : "rgba(255,255,255,.1)";
   context.stroke();
   context.fillStyle = accent ? accentColor : "#cbd5e1";
   context.textBaseline = "middle";
@@ -543,12 +562,27 @@ function drawImageFrame(
   const centerX = rect.x + rect.width / 2;
   const centerY = rect.y + rect.height / 2;
   const radius = Math.max(rect.width, rect.height) * 0.68;
-  const gradient = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+  const gradient = context.createRadialGradient(
+    centerX,
+    centerY,
+    0,
+    centerX,
+    centerY,
+    radius,
+  );
   gradient.addColorStop(0, "rgba(8,47,73,.12)");
   gradient.addColorStop(0.58, "rgba(8,47,73,.045)");
   gradient.addColorStop(1, "rgba(3,7,18,0)");
   context.beginPath();
-  context.ellipse(centerX, centerY, rect.width * 0.62, rect.height * 0.62, 0, 0, Math.PI * 2);
+  context.ellipse(
+    centerX,
+    centerY,
+    rect.width * 0.62,
+    rect.height * 0.62,
+    0,
+    0,
+    Math.PI * 2,
+  );
   context.fillStyle = gradient;
   context.fill();
   context.restore();
@@ -566,8 +600,11 @@ function buildAmbientNodes(width: number, height: number) {
       if (presence < 0.12) continue;
       const phase = hashNoise(column * 6.1, row * 9.7) * Math.PI * 2;
       const speed = 0.07 + hashNoise(column * 4.7, row * 7.9) * 0.11;
-      const x = ((column + 0.2 + hashNoise(column + 2, row + 7) * 0.6) / columns) * width;
-      const y = ((row + 0.2 + hashNoise(row + 11, column + 3) * 0.6) / rows) * height;
+      const x =
+        ((column + 0.2 + hashNoise(column + 2, row + 7) * 0.6) / columns) *
+        width;
+      const y =
+        ((row + 0.2 + hashNoise(row + 11, column + 3) * 0.6) / rows) * height;
       nodes.push({
         x,
         y,
@@ -575,7 +612,8 @@ function buildAmbientNodes(width: number, height: number) {
         homeY: y,
         vx: Math.cos(phase) * speed,
         vy: Math.sin(phase) * speed,
-        size: getParticlePixelSize(width) *
+        size:
+          getParticlePixelSize(width) *
           (0.82 + hashNoise(column * 8.3, row * 2.9) * 0.18),
         phase,
         warm: hashNoise(column * 11.3 + 2, row * 4.9 + 8) > 0.82,
@@ -606,16 +644,23 @@ function drawAmbientNetwork(
       node.phase +
       Math.sin(time * 0.00017 + node.phase) * 1.7 +
       Math.cos(time * 0.00011 - node.phase) * 0.75;
-    const wanderSpeed = 0.08 + (Math.sin(time * 0.00023 + node.phase) + 1) * 0.055;
-    node.vx += (Math.cos(wanderAngle) * wanderSpeed - node.vx) * 0.009 * frameScale;
-    node.vy += (Math.sin(wanderAngle) * wanderSpeed - node.vy) * 0.009 * frameScale;
+    const wanderSpeed =
+      0.08 + (Math.sin(time * 0.00023 + node.phase) + 1) * 0.055;
+    node.vx +=
+      (Math.cos(wanderAngle) * wanderSpeed - node.vx) * 0.009 * frameScale;
+    node.vy +=
+      (Math.sin(wanderAngle) * wanderSpeed - node.vy) * 0.009 * frameScale;
 
     let targetTether = 0;
     if (cloudPull && cloudPull.strength > 0.001) {
       const pullX = cloudPull.x - node.x;
       const pullY = cloudPull.y - node.y;
       const pullDistance = Math.sqrt(pullX * pullX + pullY * pullY) || 1;
-      const proximity = smoothstep(cloudPull.radius, cloudPull.radius * 0.08, pullDistance);
+      const proximity = smoothstep(
+        cloudPull.radius,
+        cloudPull.radius * 0.08,
+        pullDistance,
+      );
       targetTether = proximity * cloudPull.strength;
     }
     const tetherEase = targetTether > node.tether ? 0.24 : 0.035;
@@ -634,17 +679,15 @@ function drawAmbientNetwork(
       const pullForce = node.tether * frameScale;
       const lateralSpread = Math.sin(node.phase * 2.37) * 0.082;
       node.vx +=
-        (
-          cloudPull.directionX * 0.205 +
+        (cloudPull.directionX * 0.205 +
           inwardX * 0.026 -
-          cloudPull.directionY * lateralSpread
-        ) * pullForce;
+          cloudPull.directionY * lateralSpread) *
+        pullForce;
       node.vy +=
-        (
-          cloudPull.directionY * 0.205 +
+        (cloudPull.directionY * 0.205 +
           inwardY * 0.026 +
-          cloudPull.directionX * lateralSpread
-        ) * pullForce;
+          cloudPull.directionX * lateralSpread) *
+        pullForce;
     }
 
     let homeDx = node.homeX - node.x;
@@ -696,8 +739,10 @@ function drawAmbientNetwork(
       if (distanceSquared >= minimumSeparation * minimumSeparation) continue;
       const fallbackAngle = start.phase - end.phase;
       const distance = Math.sqrt(distanceSquared) || 1;
-      const normalX = distanceSquared > 0 ? dx / distance : Math.cos(fallbackAngle);
-      const normalY = distanceSquared > 0 ? dy / distance : Math.sin(fallbackAngle);
+      const normalX =
+        distanceSquared > 0 ? dx / distance : Math.cos(fallbackAngle);
+      const normalY =
+        distanceSquared > 0 ? dy / distance : Math.sin(fallbackAngle);
       const overlap = minimumSeparation - (distanceSquared > 0 ? distance : 0);
       const correction = overlap * clamp(frameScale * 0.3, 0.18, 0.46);
       start.x -= normalX * correction;
@@ -753,9 +798,7 @@ function drawAmbientNetwork(
       const tetherStrength = Math.max(start.tether, end.tether);
       const tetherGlow = tetherStrength * 0.115;
       const alpha =
-        (1 - distance / connectionRadius) * 0.16 +
-        pointerBoost +
-        tetherGlow;
+        (1 - distance / connectionRadius) * 0.16 + pointerBoost + tetherGlow;
 
       const warmLine = start.warm || end.warm;
       context.lineWidth = (width < 760 ? 1 : 1.25) + tetherStrength * 0.72;
@@ -809,13 +852,17 @@ function drawPortraitConnections(
     );
     if (visibleAlpha < 0.08) continue;
     if (candidates.length < candidateLimit) candidates.push(particle);
-    if (particle.edgeMotion > 0.18 && edgeCandidates.length < edgeCandidateLimit) {
+    if (
+      particle.edgeMotion > 0.18 &&
+      edgeCandidates.length < edgeCandidateLimit
+    ) {
       edgeCandidates.push(particle);
     }
     if (
       candidates.length >= candidateLimit &&
       edgeCandidates.length >= edgeCandidateLimit
-    ) break;
+    )
+      break;
   }
 
   context.save();
@@ -823,7 +870,11 @@ function drawPortraitConnections(
   for (let index = 0; index < candidates.length; index += 1) {
     const start = candidates[index];
     let connections = 0;
-    for (let nextIndex = index + 1; nextIndex < candidates.length; nextIndex += 1) {
+    for (
+      let nextIndex = index + 1;
+      nextIndex < candidates.length;
+      nextIndex += 1
+    ) {
       const end = candidates[nextIndex];
       const distance = Math.hypot(end.x - start.x, end.y - start.y);
       if (distance > connectionRadius) continue;
@@ -833,8 +884,7 @@ function drawPortraitConnections(
       );
       const reveal = pointer.active ? smoothstep(240, 18, cursorDistance) : 0;
       const alpha =
-        ((1 - distance / connectionRadius) * 0.17 +
-        reveal * 0.19) *
+        ((1 - distance / connectionRadius) * 0.17 + reveal * 0.19) *
         lerp(
           1,
           clamp(Math.max(start.edgeMotion, end.edgeMotion) * 2.1, 0, 1),
@@ -927,85 +977,13 @@ function getPanelMetrics(
   };
 }
 
-async function buildRichContentLayer(
-  scene: PortfolioSection,
-  width: number,
-  height: number,
-) {
-  const metrics = getPanelMetrics(scene, width, height);
-  const layerWidth = Math.max(1, Math.floor(metrics.contentWidth));
-  const layerHeight = Math.max(
-    1,
-    Math.floor(metrics.panelHeight - metrics.padding * 2),
-  );
-  const rasterScale = getParticleCanvasDpr(width, 1.5);
-  const bodySize = metrics.mobile
-    ? clamp(scene.typography.bodyFontSize * 0.82, 11, 16)
-    : clamp(scene.typography.bodyFontSize, 12, 24);
-  const titleSize = metrics.mobile
-    ? clamp(scene.typography.titleFontSize * 0.55, 20, 38)
-    : clamp(
-      scene.typography.titleFontSize * clamp(width / 1440, 0.78, 1.08),
-      28,
-      82,
-    );
-  const svgNamespace = "http://www.w3.org/2000/svg";
-  const htmlNamespace = "http://www.w3.org/1999/xhtml";
-  const svg = document.createElementNS(svgNamespace, "svg");
-  svg.setAttribute("width", String(layerWidth));
-  svg.setAttribute("height", String(layerHeight));
-  svg.setAttribute("viewBox", `0 0 ${layerWidth} ${layerHeight}`);
-  const foreignObject = document.createElementNS(svgNamespace, "foreignObject");
-  foreignObject.setAttribute("width", "100%");
-  foreignObject.setAttribute("height", "100%");
-  const root = document.createElementNS(htmlNamespace, "div");
-  root.setAttribute("xmlns", htmlNamespace);
-  root.setAttribute(
-    "style",
-    `box-sizing:border-box;width:100%;height:100%;overflow:hidden;color:${scene.typography.bodyColor};font:500 ${bodySize}px/1.45 'Space Grotesk',Arial,sans-serif;`,
-  );
-  const style = document.createElementNS(htmlNamespace, "style");
-  style.textContent = `
-    *{box-sizing:border-box}.section-content{position:relative;height:100%;overflow:hidden;padding-bottom:${metrics.mobile ? 38 : 52}px}p{margin:0 0 ${metrics.mobile ? 6 : 10}px}h1,h2,h3,h4{margin:0 0 ${metrics.mobile ? 7 : 12}px;color:${scene.typography.titleColor};font-family:'Syne',Arial,sans-serif;line-height:.98}h1{font-size:${titleSize}px;font-weight:800}h2{font-size:${Math.max(bodySize * 1.8, titleSize * 0.58)}px}h3{font-size:${Math.max(bodySize * 1.35, titleSize * 0.4)}px}h4{font-size:1.12em}.section-content>p:first-child{display:inline-block;margin-bottom:${metrics.mobile ? 10 : 18}px;border:1px solid rgba(251,146,60,.28);border-radius:999px;padding:${metrics.mobile ? "4px 8px" : "5px 10px"};color:${scene.typography.accentColor};background:rgba(251,146,60,.09);font-size:${metrics.mobile ? 9 : 10}px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}ul,ol{margin:0 0 10px;padding-left:20px}li{margin:0 0 ${metrics.mobile ? 2 : 5}px}blockquote{margin:0 0 10px;padding-left:12px;border-left:2px solid ${scene.typography.accentColor}}a{color:${scene.typography.accentColor};text-decoration:none}.section-content>p:last-child>a:only-child{position:absolute;bottom:0;left:0;display:inline-block;border:1px solid rgba(103,232,249,.3);border-radius:999px;padding:${metrics.mobile ? "8px 12px" : "10px 14px"};color:#a5f3fc;background:rgba(34,211,238,.12);font-size:${metrics.mobile ? 9 : 12}px;font-weight:800;line-height:1}img{display:block;max-width:100%;max-height:${metrics.mobile ? 72 : 130}px;margin:9px 0;border-radius:10px;object-fit:cover}pre,code{font-family:monospace;color:#dbeafe}hr{border:0;border-top:1px solid rgba(255,255,255,.14);margin:10px 0}
-  `;
-  const content = document.createElementNS(htmlNamespace, "div");
-  content.setAttribute("class", "section-content");
-  content.innerHTML = sanitizeRichText(scene.contentHtml);
-  root.append(style, content);
-  foreignObject.append(root);
-  svg.append(foreignObject);
-
-  const source = new XMLSerializer().serializeToString(svg);
-  const objectUrl = URL.createObjectURL(new Blob([source], { type: "image/svg+xml" }));
-  try {
-    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
-      const element = new Image();
-      element.onload = () => resolve(element);
-      element.onerror = () => reject(new Error("Rich section content could not be rendered."));
-      element.src = objectUrl;
-    });
-    const layer = document.createElement("canvas");
-    layer.width = Math.max(1, Math.floor(layerWidth * rasterScale));
-    layer.height = Math.max(1, Math.floor(layerHeight * rasterScale));
-    const context = layer.getContext("2d");
-    if (context) {
-      context.imageSmoothingEnabled = true;
-      context.imageSmoothingQuality = "high";
-      context.drawImage(image, 0, 0, layer.width, layer.height);
-    }
-    return layer;
-  } finally {
-    URL.revokeObjectURL(objectUrl);
-  }
-}
-
 function drawSceneCopy(
   context: CanvasRenderingContext2D,
   scene: PortfolioSection,
   width: number,
   height: number,
   alpha: number,
-  richLayer?: HTMLCanvasElement | null,
+  panelOnly = false,
 ) {
   if (alpha <= 0.01) return null;
   const {
@@ -1021,38 +999,34 @@ function drawSceneCopy(
 
   context.save();
   context.globalAlpha = alpha;
-  roundedRect(context, panelX, panelY, panelWidth, panelHeight, mobile ? 22 : 30);
+  roundedRect(
+    context,
+    panelX,
+    panelY,
+    panelWidth,
+    panelHeight,
+    mobile ? 22 : 30,
+  );
   context.fillStyle = `rgba(6,10,23,${scene.panelOpacity / 100})`;
   context.fill();
   context.strokeStyle = "rgba(255,255,255,.11)";
   context.stroke();
 
   context.fillStyle = "rgba(255,255,255,.04)";
-  roundedRect(context, panelX + 7, panelY + 7, panelWidth - 14, panelHeight - 14, mobile ? 17 : 24);
+  roundedRect(
+    context,
+    panelX + 7,
+    panelY + 7,
+    panelWidth - 14,
+    panelHeight - 14,
+    mobile ? 17 : 24,
+  );
   context.strokeStyle = "rgba(255,255,255,.035)";
   context.stroke();
 
-  if (richLayer) {
-    const richHeight = panelHeight - padding * 2;
-    context.imageSmoothingEnabled = true;
-    context.imageSmoothingQuality = "high";
-    context.drawImage(
-      richLayer,
-      contentX,
-      panelY + padding,
-      contentWidth,
-      richHeight,
-    );
-    const actionRegion = scene.href
-      ? {
-        x: contentX,
-        y: panelY + panelHeight - padding - (mobile ? 30 : 34),
-        width: Math.min(contentWidth, mobile ? 180 : 240),
-        height: mobile ? 30 : 34,
-      }
-      : null;
+  if (panelOnly) {
     context.restore();
-    return actionRegion;
+    return null;
   }
 
   drawPill(
@@ -1072,7 +1046,8 @@ function drawSceneCopy(
   context.font = `800 ${titleSize}px "Syne", sans-serif`;
   while (
     titleSize > (mobile ? 19 : 34) &&
-    getWrappedLines(context, scene.title, contentWidth).length > maximumTitleLines
+    getWrappedLines(context, scene.title, contentWidth).length >
+      maximumTitleLines
   ) {
     titleSize -= 1;
     context.font = `800 ${titleSize}px "Syne", sans-serif`;
@@ -1112,7 +1087,8 @@ function drawSceneCopy(
   if (!mobile) {
     scene.facts.forEach((fact, index) => {
       const factY = bodyY + index * 38;
-      context.fillStyle = index === 0 ? scene.typography.accentColor : "#94a3b8";
+      context.fillStyle =
+        index === 0 ? scene.typography.accentColor : "#94a3b8";
       context.fillRect(contentX, factY + 7, 18, 1);
       context.font = '600 13px "Space Grotesk", sans-serif';
       context.fillStyle = "#dbe4ef";
@@ -1166,24 +1142,25 @@ function drawChrome(
   const railY = mobile ? 88 : 102;
   const railHeight = height - railY - (mobile ? 30 : 42);
   const sectionCount = content.sections.length;
-  const wrappedSceneProgress = sectionCount > 0
-    ? ((sceneProgress % sectionCount) + sectionCount) % sectionCount
-    : 0;
+  const wrappedSceneProgress =
+    sectionCount > 0
+      ? ((sceneProgress % sectionCount) + sectionCount) % sectionCount
+      : 0;
   // Use the same cyclic scale as the magnetic scroll. The remaining tail
   // after the last marker represents the last-to-first morph into a new loop.
-  const railProgress = sectionCount <= 1
-    ? 0
-    : clamp(wrappedSceneProgress / sectionCount, 0, 1);
+  const railProgress =
+    sectionCount <= 1 ? 0 : clamp(wrappedSceneProgress / sectionCount, 0, 1);
   const navRegions: ChromeNavRegion[] = [];
   const nearestScene = Math.round(sceneProgress);
   const nearestDistance = Math.abs(sceneProgress - nearestScene);
   const magneticPull = smoothstep(0.2, 0, nearestDistance);
   const activelyMoving = timeSinceScroll < 72;
   const arrivalLife = 1 - smoothstep(70, 760, timeSinceScroll);
-  const magneticActivity = activelyMoving ? magneticPull : arrivalLife * magneticPull;
-  const targetRailProgress = sectionCount <= 1
-    ? 0
-    : clamp(nearestScene / sectionCount, 0, 1);
+  const magneticActivity = activelyMoving
+    ? magneticPull
+    : arrivalLife * magneticPull;
+  const targetRailProgress =
+    sectionCount <= 1 ? 0 : clamp(nearestScene / sectionCount, 0, 1);
   const targetY = railY + railHeight * targetRailProgress;
   const progressY = railY + railHeight * railProgress;
 
@@ -1310,12 +1287,14 @@ export function ParticlePortrait({
   const scenes = content.sections;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const hostRef = useRef<HTMLDivElement>(null);
+  const copyOverlayRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const copyScrollRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const interactiveCopySceneRef = useRef(-1);
   const pointsRef = useRef<Point[]>([]);
   const shapesRef = useRef<Point[][]>([]);
   const detailLayersRef = useRef<HTMLCanvasElement[]>([]);
   const editorialLayersRef = useRef<Array<HTMLCanvasElement | null>>([]);
   const editorialStrengthsRef = useRef<number[]>([]);
-  const richLayersRef = useRef<Array<HTMLCanvasElement | null>>([]);
   const rectsRef = useRef<ImageRect[]>([]);
   const ambientNodesRef = useRef<AmbientNode[]>([]);
   const progressRef = useRef(0);
@@ -1361,9 +1340,10 @@ export function ParticlePortrait({
     let lastRenderedAt = 0;
     let dormantPainted = false;
 
-    const yieldToPaint = () => new Promise<void>((resolve) => {
-      window.requestAnimationFrame(() => resolve());
-    });
+    const yieldToPaint = () =>
+      new Promise<void>((resolve) => {
+        window.requestAnimationFrame(() => resolve());
+      });
 
     const resizeAndBuild = async () => {
       dormantPainted = false;
@@ -1379,9 +1359,13 @@ export function ParticlePortrait({
       canvas.style.height = `${height}px`;
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      const results = await Promise.allSettled(scenes.map((scene) => loadImage(scene.image)));
+      const results = await Promise.allSettled(
+        scenes.map((scene) => loadImage(scene.image)),
+      );
       if (!mounted || version !== buildVersion) return;
-      const loaded = results.map((result) => result.status === "fulfilled" ? result.value : null);
+      const loaded = results.map((result) =>
+        result.status === "fulfilled" ? result.value : null,
+      );
       if (loaded.some((image) => image === null)) {
         statusRef.current = "missing";
         onReady?.([]);
@@ -1390,7 +1374,9 @@ export function ParticlePortrait({
 
       const count = getPortraitParticleBudget(width);
       const pixelSize = getParticlePixelSize(width);
-      const imageSlots = scenes.map((scene) => getImageRect(scene, width, height));
+      const imageSlots = scenes.map((scene) =>
+        getImageRect(scene, width, height),
+      );
       const rects = loaded.map((image, index) =>
         getContainedImageRect(image!, imageSlots[index]),
       );
@@ -1411,8 +1397,12 @@ export function ParticlePortrait({
             pixelSize,
           );
           shapes.push(shape);
-          detailLayers.push(buildParticleDetailLayer(image, rects[index], shape, dpr));
-          editorialLayers.push(buildEditorialImageLayer(image, rects[index], dpr));
+          detailLayers.push(
+            buildParticleDetailLayer(image, rects[index], shape, dpr),
+          );
+          editorialLayers.push(
+            buildEditorialImageLayer(image, rects[index], dpr),
+          );
           if (index < loaded.length - 1) {
             await yieldToPaint();
             if (!mounted || version !== buildVersion) return;
@@ -1424,18 +1414,6 @@ export function ParticlePortrait({
         return;
       }
 
-      const richLayers: Array<HTMLCanvasElement | null> = [];
-      for (let index = 0; index < scenes.length; index += 1) {
-        try {
-          richLayers.push(await buildRichContentLayer(scenes[index], width, height));
-        } catch {
-          richLayers.push(null);
-        }
-        if (index < scenes.length - 1) {
-          await yieldToPaint();
-          if (!mounted || version !== buildVersion) return;
-        }
-      }
       if (!mounted || version !== buildVersion) return;
 
       rectsRef.current = rects;
@@ -1446,18 +1424,19 @@ export function ParticlePortrait({
       if (editorialStrengthsRef.current.length !== scenes.length) {
         editorialStrengthsRef.current = new Array(scenes.length).fill(0);
       }
-      richLayersRef.current = richLayers;
       pointsRef.current = shapes[0].map((point) => ({ ...point }));
       statusRef.current = "ready";
-      onReady?.(shapes[0].map(({ x, y, r, g, b, alpha, size }) => ({
-        x,
-        y,
-        r,
-        g,
-        b,
-        alpha,
-        size,
-      })));
+      onReady?.(
+        shapes[0].map(({ x, y, r, g, b, alpha, size }) => ({
+          x,
+          y,
+          r,
+          g,
+          b,
+          alpha,
+          size,
+        })),
+      );
     };
 
     const updateScrollProgress = () => {
@@ -1465,16 +1444,138 @@ export function ParticlePortrait({
       const block = document.querySelector<HTMLElement>(".scroll-loop-block");
       const blockHeight = block?.offsetHeight ?? 0;
       if (blockHeight <= 0) return;
-      const local = ((window.scrollY % blockHeight) + blockHeight) % blockHeight;
+      const local =
+        ((window.scrollY % blockHeight) + blockHeight) % blockHeight;
       progressRef.current = local / blockHeight;
+    };
+
+    const hideCopyOverlays = () => {
+      for (const element of copyOverlayRefs.current) {
+        if (!element) continue;
+        element.style.opacity = "0";
+        element.style.pointerEvents = "none";
+      }
+    };
+
+    const syncCopyOverlays = (
+      width: number,
+      height: number,
+      currentIndex: number,
+      nextIndex: number,
+      currentAlpha: number,
+      nextAlpha: number,
+      translateY: number,
+    ) => {
+      const interactiveIndex =
+        currentAlpha >= nextAlpha ? currentIndex : nextIndex;
+      const interactiveAlpha = Math.max(currentAlpha, nextAlpha);
+
+      if (
+        interactiveAlpha > 0.72 &&
+        interactiveIndex !== interactiveCopySceneRef.current
+      ) {
+        copyScrollRefs.current[interactiveIndex]?.scrollTo({ top: 0 });
+        interactiveCopySceneRef.current = interactiveIndex;
+      }
+
+      scenes.forEach((scene, index) => {
+        const element = copyOverlayRefs.current[index];
+        if (!element) return;
+
+        let alpha = 0;
+        if (index === currentIndex) alpha = Math.max(alpha, currentAlpha);
+        if (index === nextIndex) alpha = Math.max(alpha, nextAlpha);
+
+        const metrics = getPanelMetrics(scene, width, height);
+        const bodySize = metrics.mobile
+          ? clamp(scene.typography.bodyFontSize * 0.82, 11, 16)
+          : clamp(scene.typography.bodyFontSize, 12, 24);
+        const titleSize = metrics.mobile
+          ? clamp(scene.typography.titleFontSize * 0.55, 20, 38)
+          : clamp(
+              scene.typography.titleFontSize * clamp(width / 1440, 0.78, 1.08),
+              28,
+              82,
+            );
+
+        element.style.left = `${metrics.panelX}px`;
+        element.style.top = `${metrics.panelY + translateY}px`;
+        element.style.width = `${metrics.panelWidth}px`;
+        element.style.height = `${metrics.panelHeight}px`;
+        element.style.opacity = String(clamp(alpha, 0, 1));
+        element.style.pointerEvents =
+          activeRef.current &&
+          index === interactiveIndex &&
+          interactiveAlpha > 0.72
+            ? "auto"
+            : "none";
+        element.style.borderRadius = metrics.mobile ? "22px" : "30px";
+        element.style.setProperty("--copy-padding", `${metrics.padding}px`);
+        element.style.setProperty("--copy-body-size", `${bodySize}px`);
+        element.style.setProperty("--copy-title-size", `${titleSize}px`);
+        element.style.setProperty(
+          "--copy-body-color",
+          scene.typography.bodyColor,
+        );
+        element.style.setProperty(
+          "--copy-title-color",
+          scene.typography.titleColor,
+        );
+        element.style.setProperty(
+          "--copy-accent-color",
+          scene.typography.accentColor,
+        );
+        element.style.setProperty(
+          "--copy-pill-margin",
+          metrics.mobile ? "10px" : "18px",
+        );
+        element.style.setProperty(
+          "--copy-block-margin",
+          metrics.mobile ? "6px" : "10px",
+        );
+        element.style.setProperty(
+          "--copy-heading-margin",
+          metrics.mobile ? "7px" : "12px",
+        );
+        element.style.setProperty(
+          "--copy-list-item-margin",
+          metrics.mobile ? "2px" : "5px",
+        );
+        element.style.setProperty(
+          "--copy-pill-padding",
+          metrics.mobile ? "4px 8px" : "5px 10px",
+        );
+        element.style.setProperty(
+          "--copy-pill-size",
+          metrics.mobile ? "9px" : "10px",
+        );
+        element.style.setProperty(
+          "--copy-action-padding",
+          metrics.mobile ? "8px 12px" : "10px 14px",
+        );
+        element.style.setProperty(
+          "--copy-action-size",
+          metrics.mobile ? "9px" : "12px",
+        );
+        element.style.setProperty(
+          "--copy-image-height",
+          metrics.mobile ? "72px" : "130px",
+        );
+      });
     };
 
     const render = (time = 0) => {
       const width = Math.max(320, Math.floor(host.clientWidth));
       const height = Math.max(320, Math.floor(host.clientHeight));
       if (!activeRef.current) {
+        hideCopyOverlays();
         if (!dormantPainted) {
-          const dormantBackground = context.createLinearGradient(0, 0, width, height);
+          const dormantBackground = context.createLinearGradient(
+            0,
+            0,
+            width,
+            height,
+          );
           dormantBackground.addColorStop(0, "#03111c");
           dormantBackground.addColorStop(0.48, "#040817");
           dormantBackground.addColorStop(1, "#090611");
@@ -1517,8 +1618,7 @@ export function ParticlePortrait({
       const timeSinceScroll = Math.max(0, time - lastScrollAtRef.current);
       const restingWaveAmount = smoothstep(180, 900, timeSinceScroll);
       const motionWaveAmount =
-        lerp(0.48, 1, restingWaveAmount) *
-        lerp(0.72, 1, 1 - destruction);
+        lerp(0.48, 1, restingWaveAmount) * lerp(0.72, 1, 1 - destruction);
       const motionWaveOffset = Math.sin(time * 0.00054) * 0.7;
       const interfaceReveal = activeRef.current
         ? smoothstep(0, 1200, time - activationStartedRef.current)
@@ -1534,8 +1634,19 @@ export function ParticlePortrait({
       context.fillStyle = background;
       context.fillRect(0, 0, width, height);
 
-      const glowX = lerp(width * 0.18, width * 0.8, 0.5 + Math.sin(time * 0.00014) * 0.5);
-      const glow = context.createRadialGradient(glowX, height * 0.3, 0, glowX, height * 0.3, width * 0.42);
+      const glowX = lerp(
+        width * 0.18,
+        width * 0.8,
+        0.5 + Math.sin(time * 0.00014) * 0.5,
+      );
+      const glow = context.createRadialGradient(
+        glowX,
+        height * 0.3,
+        0,
+        glowX,
+        height * 0.3,
+        width * 0.42,
+      );
       glow.addColorStop(0, "rgba(14,116,144,.10)");
       glow.addColorStop(1, "rgba(14,116,144,0)");
       context.fillStyle = glow;
@@ -1552,15 +1663,17 @@ export function ParticlePortrait({
         const toY = toRect.y + toRect.height / 2;
         const travelX = toX - fromX;
         const travelY = toY - fromY;
-        const travelDistance = Math.sqrt(travelX * travelX + travelY * travelY) || 1;
+        const travelDistance =
+          Math.sqrt(travelX * travelX + travelY * travelY) || 1;
         cloudPull = {
           x: lerp(fromX, toX, morph),
           y: lerp(fromY, toY, morph),
           directionX: travelX / travelDistance,
           directionY: travelY / travelDistance,
-          radius: width < 760
-            ? Math.min(width * 0.92, 390)
-            : Math.min(width * 0.46, 690),
+          radius:
+            width < 760
+              ? Math.min(width * 0.92, 390)
+              : Math.min(width * 0.46, 690),
           strength: Math.pow(destruction, 0.68),
         };
       }
@@ -1577,7 +1690,11 @@ export function ParticlePortrait({
       );
 
       if (rects.length === scenes.length) {
-        drawImageFrame(context, rects[currentIndex], (1 - morph) * interfaceReveal);
+        drawImageFrame(
+          context,
+          rects[currentIndex],
+          (1 - morph) * interfaceReveal,
+        );
         drawImageFrame(context, rects[nextIndex], morph * interfaceReveal);
       }
 
@@ -1587,18 +1704,18 @@ export function ParticlePortrait({
       const settledSharpReveal = smootherstep(180, 1120, timeSinceScroll);
       const editorialStrengths = editorialStrengthsRef.current;
       const previousCurrentStrength = editorialStrengths[currentIndex] ?? 0;
-      const currentEditorialTarget = phase <= 0.001
-        ? settledSharpReveal * interfaceReveal
-        : Math.min(
-          previousCurrentStrength,
-          (1 - smootherstep(0.008, 0.27, phase)) * interfaceReveal,
-        );
+      const currentEditorialTarget =
+        phase <= 0.001
+          ? settledSharpReveal * interfaceReveal
+          : Math.min(
+              previousCurrentStrength,
+              (1 - smootherstep(0.008, 0.27, phase)) * interfaceReveal,
+            );
       // Fallback for browsers that retain a larger fractional remainder even
       // after magnetic scrolling: morphRaw is already fully settled here, so
       // revealing the destination cannot expose an unfinished transition.
-      const nextEditorialTarget = phase >= 0.98
-        ? settledSharpReveal * interfaceReveal
-        : 0;
+      const nextEditorialTarget =
+        phase >= 0.98 ? settledSharpReveal * interfaceReveal : 0;
       for (let index = 0; index < editorialStrengths.length; index += 1) {
         let target = index === currentIndex ? currentEditorialTarget : 0;
         if (index === nextIndex) target = Math.max(target, nextEditorialTarget);
@@ -1612,9 +1729,16 @@ export function ParticlePortrait({
       }
       const currentEditorialReveal = editorialStrengths[currentIndex] ?? 0;
       const nextEditorialReveal = editorialStrengths[nextIndex] ?? 0;
-      const editorialReveal = clamp(currentEditorialReveal + nextEditorialReveal, 0, 1);
+      const editorialReveal = clamp(
+        currentEditorialReveal + nextEditorialReveal,
+        0,
+        1,
+      );
       const editorialLayers = editorialLayersRef.current;
-      if (editorialLayers.length === scenes.length && rects.length === scenes.length) {
+      if (
+        editorialLayers.length === scenes.length &&
+        rects.length === scenes.length
+      ) {
         context.save();
         context.imageSmoothingEnabled = true;
         context.imageSmoothingQuality = "high";
@@ -1622,7 +1746,13 @@ export function ParticlePortrait({
         if (currentLayer && currentEditorialReveal > 0.025) {
           context.globalAlpha = currentEditorialReveal;
           const rect = rects[currentIndex];
-          context.drawImage(currentLayer, rect.x, rect.y, rect.width, rect.height);
+          context.drawImage(
+            currentLayer,
+            rect.x,
+            rect.y,
+            rect.width,
+            rect.height,
+          );
         }
         const nextLayer = editorialLayers[nextIndex];
         if (nextLayer && nextEditorialReveal > 0.025) {
@@ -1650,25 +1780,45 @@ export function ParticlePortrait({
         const burstProgress = (time - burst.startedAt) / 850;
         const burstActive = burstProgress >= 0 && burstProgress < 1;
         const burstRadius = burstProgress * 310;
-        const particleMaterialization = smoothstep(0.015, 0.92, interfaceReveal);
+        const particleMaterialization = smoothstep(
+          0.015,
+          0.92,
+          interfaceReveal,
+        );
         const routeStartRect = rects[currentIndex];
         const routeEndRect = rects[nextIndex];
         const edgeFrameX = lerp(routeStartRect.x, routeEndRect.x, morph);
         const edgeFrameY = lerp(routeStartRect.y, routeEndRect.y, morph);
-        const edgeFrameWidth = lerp(routeStartRect.width, routeEndRect.width, morph);
-        const edgeFrameHeight = lerp(routeStartRect.height, routeEndRect.height, morph);
+        const edgeFrameWidth = lerp(
+          routeStartRect.width,
+          routeEndRect.width,
+          morph,
+        );
+        const edgeFrameHeight = lerp(
+          routeStartRect.height,
+          routeEndRect.height,
+          morph,
+        );
         const routeDeltaX =
-          routeEndRect.x + routeEndRect.width / 2 -
+          routeEndRect.x +
+          routeEndRect.width / 2 -
           (routeStartRect.x + routeStartRect.width / 2);
         const routeDeltaY =
-          routeEndRect.y + routeEndRect.height / 2 -
+          routeEndRect.y +
+          routeEndRect.height / 2 -
           (routeStartRect.y + routeStartRect.height / 2);
         const routeDistance = Math.hypot(routeDeltaX, routeDeltaY);
-        const routeDirectionX = routeDistance > 1 ? routeDeltaX / routeDistance : 1;
-        const routeDirectionY = routeDistance > 1 ? routeDeltaY / routeDistance : 0;
+        const routeDirectionX =
+          routeDistance > 1 ? routeDeltaX / routeDistance : 1;
+        const routeDirectionY =
+          routeDistance > 1 ? routeDeltaY / routeDistance : 0;
         const routeNormalX = -routeDirectionY;
         const routeNormalY = routeDirectionX;
-        const routeAmplitude = clamp(routeDistance * 0.18, width * 0.045, width * 0.115);
+        const routeAmplitude = clamp(
+          routeDistance * 0.18,
+          width * 0.045,
+          width * 0.115,
+        );
 
         if (connectionReveal > 0.025) {
           context.save();
@@ -1694,13 +1844,16 @@ export function ParticlePortrait({
           // inheriting the full portrait budget without producing a wipe.
           if (
             particleMaterialization < 0.999 &&
-            ((index * 433) % particles.length) / particles.length > particleMaterialization
-          ) continue;
+            ((index * 433) % particles.length) / particles.length >
+              particleMaterialization
+          )
+            continue;
           const angle = start.scatterAngle;
           const distance = start.scatterDistance * destruction * 0.42;
-          const wave = destruction > 0.001
-            ? Math.sin(index * 0.031 + time * 0.0014) * destruction * 7
-            : 0;
+          const wave =
+            destruction > 0.001
+              ? Math.sin(index * 0.031 + time * 0.0014) * destruction * 7
+              : 0;
           const ambientDriftX = lerp(start.driftX, end.driftX, morph) * idleX;
           const ambientDriftY = lerp(start.driftY, end.driftY, morph) * idleY;
           const edgeMotion = lerp(start.edgeMotion, end.edgeMotion, morph);
@@ -1720,11 +1873,9 @@ export function ParticlePortrait({
           // so the pattern never leaves residual offsets after the morph.
           const ribbonPhase = start.ribbonPhase;
           const ribbonDelay = start.ribbonDelay;
-          const routeProgress = easeInOutCubic(clamp(
-            (morphTravelRaw - ribbonDelay) / (1 - ribbonDelay),
-            0,
-            1,
-          ));
+          const routeProgress = easeInOutCubic(
+            clamp((morphTravelRaw - ribbonDelay) / (1 - ribbonDelay), 0, 1),
+          );
           const routeEnvelope = Math.sin(routeProgress * Math.PI);
           const ribbonWave = Math.sin(
             ribbonPhase + routeProgress * Math.PI * 3.5,
@@ -1735,16 +1886,20 @@ export function ParticlePortrait({
           const baseX =
             lerp(start.tx, end.tx, routeProgress) +
             routeNormalX * ribbonWave * routeAmplitude * routeEnvelope +
-            routeDirectionX * longitudinalWave * routeAmplitude * 0.16 * routeEnvelope;
+            routeDirectionX *
+              longitudinalWave *
+              routeAmplitude *
+              0.16 *
+              routeEnvelope;
           const baseY =
             lerp(start.ty, end.ty, routeProgress) +
             routeNormalY * ribbonWave * routeAmplitude * routeEnvelope +
-            routeDirectionY * longitudinalWave * routeAmplitude * 0.16 * routeEnvelope;
-          const editorialU = clamp(
-            (baseX - edgeFrameX) / edgeFrameWidth,
-            0,
-            1,
-          );
+            routeDirectionY *
+              longitudinalWave *
+              routeAmplitude *
+              0.16 *
+              routeEnvelope;
+          const editorialU = clamp((baseX - edgeFrameX) / edgeFrameWidth, 0, 1);
           const editorialV = clamp(
             (baseY - edgeFrameY) / edgeFrameHeight,
             0,
@@ -1766,14 +1921,15 @@ export function ParticlePortrait({
             edgeMotion,
             editorialEdgeBand * edgePresence,
           );
-          const motionWave = motionWaveAmount > 0.001
-            ? Math.sin(
-              baseX * 0.014 +
-              baseY * 0.009 -
-              time * 0.00225 +
-              motionWaveOffset,
-            ) * motionWaveAmount
-            : 0;
+          const motionWave =
+            motionWaveAmount > 0.001
+              ? Math.sin(
+                  baseX * 0.014 +
+                    baseY * 0.009 -
+                    time * 0.00225 +
+                    motionWaveOffset,
+                ) * motionWaveAmount
+              : 0;
           let targetX =
             baseX +
             Math.cos(angle) * distance +
@@ -1793,8 +1949,7 @@ export function ParticlePortrait({
             const editorialOrbit =
               time * 0.00042 + edgeOrbitAngle + index * 0.0021;
             const editorialPulse =
-              (3.2 + ((index * 29) % 17) * 0.28) *
-              editorialEdgeBand;
+              (3.2 + ((index * 29) % 17) * 0.28) * editorialEdgeBand;
             targetX += Math.cos(editorialOrbit) * editorialPulse;
             targetY += Math.sin(editorialOrbit * 1.13) * editorialPulse * 1.18;
           }
@@ -1816,9 +1971,11 @@ export function ParticlePortrait({
           if (burstActive) {
             const burstDx = particle.x - burst.x;
             const burstDy = particle.y - burst.y;
-            const burstDistance = Math.sqrt(burstDx * burstDx + burstDy * burstDy) || 1;
+            const burstDistance =
+              Math.sqrt(burstDx * burstDx + burstDy * burstDy) || 1;
             const ringDistance = Math.abs(burstDistance - burstRadius);
-            const ringForce = smoothstep(34, 0, ringDistance) * (1 - burstProgress);
+            const ringForce =
+              smoothstep(34, 0, ringDistance) * (1 - burstProgress);
             targetX += (burstDx / burstDistance) * ringForce * 76;
             targetY += (burstDy / burstDistance) * ringForce * 76;
             interaction = Math.max(interaction, ringForce);
@@ -1840,23 +1997,28 @@ export function ParticlePortrait({
             particle.x = lerp(particle.x, targetX, destinationLock);
             particle.y = lerp(particle.y, targetY, destinationLock);
           }
-          particle.r = settledAtStart ? start.r : Math.round(lerp(start.r, end.r, morph));
-          particle.g = settledAtStart ? start.g : Math.round(lerp(start.g, end.g, morph));
-          particle.b = settledAtStart ? start.b : Math.round(lerp(start.b, end.b, morph));
+          particle.r = settledAtStart
+            ? start.r
+            : Math.round(lerp(start.r, end.r, morph));
+          particle.g = settledAtStart
+            ? start.g
+            : Math.round(lerp(start.g, end.g, morph));
+          particle.b = settledAtStart
+            ? start.b
+            : Math.round(lerp(start.b, end.b, morph));
           particle.alpha = settledAtStart
             ? start.alpha
             : lerp(start.alpha, end.alpha, morph) * (1 - destruction * 0.12);
           particle.size = lerp(start.size, end.size, morph);
           particle.edgeMotion = activeEdgeMotion;
           const fragmentNoise = ((index * 47) % 101) / 100;
-          const edgeFragmentVisible = fragmentNoise < lerp(
-            0.52,
-            0.985,
-            editorialEdgeBand,
-          );
-          const renderedSize = particle.size *
+          const edgeFragmentVisible =
+            fragmentNoise < lerp(0.52, 0.985, editorialEdgeBand);
+          const renderedSize =
+            particle.size *
             (1 + interaction * 0.35) *
-            (1 + edgePresence * editorialEdgeBand * (0.24 + fragmentNoise * 0.44));
+            (1 +
+              edgePresence * editorialEdgeBand * (0.24 + fragmentNoise * 0.44));
           // In editorial mode, preserve a living particle perimeter while the
           // clean source carries fine facial detail through the cloud centre.
           const editorialParticleMask = clamp(
@@ -1865,20 +2027,26 @@ export function ParticlePortrait({
             1,
           );
           const baseRenderedAlpha = clamp(
-            particle.alpha * interfaceReveal * lerp(1, editorialParticleMask, editorialReveal),
+            particle.alpha *
+              interfaceReveal *
+              lerp(1, editorialParticleMask, editorialReveal),
             0,
             1,
           );
           const editorialEdgeAlpha = edgeFragmentVisible
-            ? interfaceReveal * edgePresence *
+            ? interfaceReveal *
+              edgePresence *
               Math.pow(editorialEdgeBand, 0.72) *
               (0.52 + fragmentNoise * 0.46)
             : 0;
           const renderedAlpha = Math.max(baseRenderedAlpha, editorialEdgeAlpha);
 
-          context.fillStyle = settledAtStart && interfaceReveal >= 0.999 && editorialReveal < 0.001
-            ? start.color
-            : `rgba(${particle.r},${particle.g},${particle.b},${renderedAlpha})`;
+          context.fillStyle =
+            settledAtStart &&
+            interfaceReveal >= 0.999 &&
+            editorialReveal < 0.001
+              ? start.color
+              : `rgba(${particle.r},${particle.g},${particle.b},${renderedAlpha})`;
           context.fillRect(
             particle.x - renderedSize * 0.5,
             particle.y - renderedSize * 0.5,
@@ -1901,7 +2069,12 @@ export function ParticlePortrait({
           detailInteractionRef.current = lerp(
             detailInteractionRef.current,
             detailTarget,
-            clamp((detailTarget < detailInteractionRef.current ? 0.16 : 0.075) * frameScale, 0, 1),
+            clamp(
+              (detailTarget < detailInteractionRef.current ? 0.16 : 0.075) *
+                frameScale,
+              0,
+              1,
+            ),
           );
           const interactionAlpha = detailInteractionRef.current;
           const currentDetailAlpha =
@@ -1968,42 +2141,54 @@ export function ParticlePortrait({
 
       const currentCopyAlpha =
         (1 - clamp(morphRaw * 3.2, 0, 1)) * interfaceReveal;
-      const nextCopyAlpha =
-        smootherstep(0.8, 0.94, morphRaw) * interfaceReveal;
+      const nextCopyAlpha = smootherstep(0.8, 0.94, morphRaw) * interfaceReveal;
+      const copyTranslateY = (1 - interfaceReveal) * 18;
       actionRef.current = null;
       context.save();
-      context.translate(0, (1 - interfaceReveal) * 18);
-      const currentAction = drawSceneCopy(
+      context.translate(0, copyTranslateY);
+      drawSceneCopy(
         context,
         scenes[currentIndex],
         width,
         height,
         currentCopyAlpha,
-        richLayersRef.current[currentIndex],
+        true,
       );
-      const nextAction = drawSceneCopy(
+      drawSceneCopy(
         context,
         scenes[nextIndex],
         width,
         height,
         nextCopyAlpha,
-        richLayersRef.current[nextIndex],
+        true,
       );
       context.restore();
-      if (currentAction && scenes[currentIndex].href && currentCopyAlpha > 0.75) {
-        actionRef.current = { rect: currentAction, href: scenes[currentIndex].href! };
-      } else if (nextAction && scenes[nextIndex].href && nextCopyAlpha > 0.75) {
-        actionRef.current = { rect: nextAction, href: scenes[nextIndex].href! };
-      }
+      syncCopyOverlays(
+        width,
+        height,
+        currentIndex,
+        nextIndex,
+        currentCopyAlpha,
+        nextCopyAlpha,
+        copyTranslateY,
+      );
 
       if (activeRef.current && statusRef.current === "loading") {
         context.font = '600 12px "Space Grotesk", sans-serif';
         context.fillStyle = "#94a3b8";
-        context.fillText("CROPPING SOURCE IMAGES / BUILDING PARTICLES…", 34, height - 58);
+        context.fillText(
+          "CROPPING SOURCE IMAGES / BUILDING PARTICLES…",
+          34,
+          height - 58,
+        );
       } else if (activeRef.current && statusRef.current === "missing") {
         context.font = '600 14px "Space Grotesk", sans-serif';
         context.fillStyle = "#fda4af";
-        context.fillText("A canvas source image could not be loaded.", 34, height - 58);
+        context.fillText(
+          "A canvas source image could not be loaded.",
+          34,
+          height - 58,
+        );
       }
 
       navRegionsRef.current = [];
@@ -2050,14 +2235,15 @@ export function ParticlePortrait({
       const morph = easeInOutCubic(clamp(morphRaw / 0.84, 0, 1));
       const currentRect = rectsRef.current[currentIndex];
       const nextRect = rectsRef.current[nextIndex];
-      const particleRect = currentRect && nextRect
-        ? {
-          x: lerp(currentRect.x, nextRect.x, morph),
-          y: lerp(currentRect.y, nextRect.y, morph),
-          width: lerp(currentRect.width, nextRect.width, morph),
-          height: lerp(currentRect.height, nextRect.height, morph),
-        }
-        : null;
+      const particleRect =
+        currentRect && nextRect
+          ? {
+              x: lerp(currentRect.x, nextRect.x, morph),
+              y: lerp(currentRect.y, nextRect.y, morph),
+              width: lerp(currentRect.width, nextRect.width, morph),
+              height: lerp(currentRect.height, nextRect.height, morph),
+            }
+          : null;
       const interactionPadding = touch ? 64 : 34;
       const overParticles = Boolean(
         particleRect &&
@@ -2078,12 +2264,17 @@ export function ParticlePortrait({
       const action = actionRef.current;
       const overAction = Boolean(
         action &&
-        x >= action.rect.x && x <= action.rect.x + action.rect.width &&
-        y >= action.rect.y && y <= action.rect.y + action.rect.height,
+        x >= action.rect.x &&
+        x <= action.rect.x + action.rect.width &&
+        y >= action.rect.y &&
+        y <= action.rect.y + action.rect.height,
       );
-      const overNavigation = navRegionsRef.current.some(({ rect: navRect }) =>
-        x >= navRect.x && x <= navRect.x + navRect.width &&
-        y >= navRect.y && y <= navRect.y + navRect.height
+      const overNavigation = navRegionsRef.current.some(
+        ({ rect: navRect }) =>
+          x >= navRect.x &&
+          x <= navRect.x + navRect.width &&
+          y >= navRect.y &&
+          y <= navRect.y + navRect.height,
       );
       document.body.style.cursor = touch
         ? "default"
@@ -2096,6 +2287,13 @@ export function ParticlePortrait({
 
     const pointerPosition = (event: PointerEvent) => {
       if (event.pointerType === "touch") return;
+      const target = event.target as Element | null;
+      if (target?.closest(".particle-portrait-copy-overlay")) {
+        pointerRef.current.active = false;
+        pointerRef.current.present = false;
+        document.body.style.cursor = "default";
+        return;
+      }
       setPointerPosition(event.clientX, event.clientY, false);
     };
 
@@ -2112,27 +2310,37 @@ export function ParticlePortrait({
     };
 
     const handleClick = (event: MouseEvent) => {
+      const target = event.target as Element | null;
+      if (target?.closest(".particle-portrait-copy-overlay")) return;
+
       const action = actionRef.current;
       const rect = host.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
       if (
         action &&
-        x >= action.rect.x && x <= action.rect.x + action.rect.width &&
-        y >= action.rect.y && y <= action.rect.y + action.rect.height
+        x >= action.rect.x &&
+        x <= action.rect.x + action.rect.width &&
+        y >= action.rect.y &&
+        y <= action.rect.y + action.rect.height
       ) {
         window.open(action.href, "_blank", "noopener,noreferrer");
         return;
       }
 
-      const navigationTarget = navRegionsRef.current.find(({ rect: navRect }) =>
-        x >= navRect.x && x <= navRect.x + navRect.width &&
-        y >= navRect.y && y <= navRect.y + navRect.height
+      const navigationTarget = navRegionsRef.current.find(
+        ({ rect: navRect }) =>
+          x >= navRect.x &&
+          x <= navRect.x + navRect.width &&
+          y >= navRect.y &&
+          y <= navRect.y + navRect.height,
       );
       if (navigationTarget) {
-        window.dispatchEvent(new CustomEvent("portfolio:navigate-section", {
-          detail: { index: navigationTarget.index },
-        }));
+        window.dispatchEvent(
+          new CustomEvent("portfolio:navigate-section", {
+            detail: { index: navigationTarget.index },
+          }),
+        );
         return;
       }
 
@@ -2178,8 +2386,218 @@ export function ParticlePortrait({
   }, [content, onReady, scenes]);
 
   return (
-    <div ref={hostRef} className="particle-portrait-shell">
+    <div
+      ref={hostRef}
+      className="particle-portrait-shell"
+      style={{ position: "relative" }}
+    >
       <canvas ref={canvasRef} className="particle-portrait-canvas" />
+
+      {scenes.map((scene, index) => (
+        <div
+          key={`${scene.index}-${index}`}
+          ref={(element) => {
+            copyOverlayRefs.current[index] = element;
+          }}
+          className="particle-portrait-copy-overlay"
+          aria-hidden={!active}
+        >
+          <div
+            ref={(element) => {
+              copyScrollRefs.current[index] = element;
+            }}
+            className="particle-portrait-copy-scroll "
+            tabIndex={active ? 0 : -1}
+            onWheel={(event) => event.stopPropagation()}
+            onClick={(event) => event.stopPropagation()}
+            dangerouslySetInnerHTML={{
+              __html: sanitizeRichText(scene.contentHtml),
+            }}
+          />
+        </div>
+      ))}
+
+      <style>{`
+        .particle-portrait-copy-overlay {
+          position: absolute;
+          z-index: 3;
+          overflow: hidden;
+          opacity: 0;
+          will-change: left, top, width, height, opacity;
+        }
+        .particle-portrait-copy-scroll h2{
+          position: sticky;
+          top: 0;
+          z-index: 10;
+          background: #060a17;
+          padding-bottom: 12px;
+        }
+        .particle-portrait-copy-scroll h1,
+        .particle-portrait-copy-scroll h3 {
+          position: sticky;
+          top: 0px;
+          z-index: 10;
+          background: #060a17;
+          padding-bottom: 12px;
+        }
+        .particle-portrait-copy-scroll {
+          box-sizing: border-box;
+          width: 100%;
+          height: 100%;
+          overflow-x: hidden;
+          overflow-y: auto;
+          overscroll-behavior: contain;
+          touch-action: pan-y;
+          scrollbar-gutter: stable;
+          padding: var(--copy-padding, 28px);
+          color: var(--copy-body-color, #cbd5e1);
+          font: 500 var(--copy-body-size, 16px) / 1.45
+            "Space Grotesk", Arial, sans-serif;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        .particle-portrait-copy-scroll:focus {
+          outline: none;
+        }
+
+        .particle-portrait-copy-scroll * {
+          box-sizing: border-box;
+        }
+
+        .particle-portrait-copy-scroll p {
+          margin: 0 0 var(--copy-block-margin, 10px);
+        }
+
+        .particle-portrait-copy-scroll h1,
+        .particle-portrait-copy-scroll h2,
+        .particle-portrait-copy-scroll h3,
+        .particle-portrait-copy-scroll h4 {
+          margin: 0 0 var(--copy-heading-margin, 12px);
+          color: var(--copy-title-color, #f8fafc);
+          font-family: "Syne", Arial, sans-serif;
+          line-height: 0.98;
+        }
+
+        .particle-portrait-copy-scroll h1 {
+          font-size: var(--copy-title-size, 48px);
+          font-weight: 800;
+        }
+
+        .particle-portrait-copy-scroll h2 {
+          font-size: max(
+            calc(var(--copy-body-size, 16px) * 1.8),
+            calc(var(--copy-title-size, 48px) * 0.58)
+          );
+        }
+
+        .particle-portrait-copy-scroll h3 {
+          font-size: max(
+            calc(var(--copy-body-size, 16px) * 1.35),
+            calc(var(--copy-title-size, 48px) * 0.4)
+          );
+        }
+
+        .particle-portrait-copy-scroll h4 {
+          font-size: 1.12em;
+        }
+
+        .particle-portrait-copy-scroll > p:first-child {
+          display: inline-block;
+          margin-bottom: var(--copy-pill-margin, 18px);
+          border: 1px solid rgba(251, 146, 60, 0.28);
+          border-radius: 999px;
+          padding: var(--copy-pill-padding, 5px 10px);
+          color: var(--copy-accent-color, #fb923c);
+          background: rgba(251, 146, 60, 0.09);
+          font-size: var(--copy-pill-size, 10px);
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+
+        .particle-portrait-copy-scroll ul,
+        .particle-portrait-copy-scroll ol {
+          margin: 0 0 10px;
+          padding-left: 20px;
+        }
+
+        .particle-portrait-copy-scroll li {
+          margin: 0 0 var(--copy-list-item-margin, 5px);
+        }
+
+        .particle-portrait-copy-scroll blockquote {
+          margin: 0 0 10px;
+          padding-left: 12px;
+          border-left: 2px solid var(--copy-accent-color, #fb923c);
+        }
+
+        .particle-portrait-copy-scroll a {
+          color: var(--copy-accent-color, #fb923c);
+          text-decoration: none;
+          cursor: pointer;
+        }
+
+        .particle-portrait-copy-scroll > p:last-child > a:only-child {
+          display: inline-block;
+          margin-top: 8px;
+          border: 1px solid rgba(103, 232, 249, 0.3);
+          border-radius: 999px;
+          padding: var(--copy-action-padding, 10px 14px);
+          color: #a5f3fc;
+          background: rgba(34, 211, 238, 0.12);
+          font-size: var(--copy-action-size, 12px);
+          font-weight: 800;
+          line-height: 1;
+        }
+
+        .particle-portrait-copy-scroll img {
+          display: block;
+          max-width: 100%;
+          max-height: var(--copy-image-height, 130px);
+          margin: 9px 0;
+          border-radius: 10px;
+          object-fit: cover;
+        }
+
+        .particle-portrait-copy-scroll pre,
+        .particle-portrait-copy-scroll code {
+          font-family: monospace;
+          color: #dbeafe;
+        }
+
+        .particle-portrait-copy-scroll pre {
+          max-width: 100%;
+          overflow-x: auto;
+        }
+
+        .particle-portrait-copy-scroll hr {
+          border: 0;
+          border-top: 1px solid rgba(255, 255, 255, 0.14);
+          margin: 10px 0;
+        }
+
+        .particle-portrait-copy-scroll::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .particle-portrait-copy-scroll::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        .particle-portrait-copy-scroll::-webkit-scrollbar-thumb {
+          border-radius: 999px;
+          background: rgba(103, 232, 249, 0.3);
+        }
+
+        .particle-portrait-copy-scroll::-webkit-scrollbar-thumb:hover {
+          background: rgba(103, 232, 249, 0.48);
+        }
+
+        .particle-portrait-copy-scroll {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(103, 232, 249, 0.3) transparent;
+        }
+      `}</style>
     </div>
   );
 }

@@ -1,5 +1,11 @@
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, MeshDistortMaterial, OrbitControls, PerspectiveCamera, Sparkles } from "@react-three/drei";
+import {
+  Float,
+  MeshDistortMaterial,
+  OrbitControls,
+  PerspectiveCamera,
+  Sparkles,
+} from "@react-three/drei";
 import { useRef } from "react";
 import type { Group, Mesh } from "three";
 
@@ -41,11 +47,19 @@ function EnergyCore() {
       <group ref={ringRef}>
         <mesh rotation={[1.2, 0.2, 0]}>
           <torusGeometry args={[2.15, 0.045, 32, 160]} />
-          <meshStandardMaterial color="#fdba74" emissive="#f97316" emissiveIntensity={1.1} />
+          <meshStandardMaterial
+            color="#fdba74"
+            emissive="#f97316"
+            emissiveIntensity={1.1}
+          />
         </mesh>
         <mesh rotation={[0.25, 0.9, 1]}>
           <torusGeometry args={[1.7, 0.035, 24, 120]} />
-          <meshStandardMaterial color="#67e8f9" emissive="#22d3ee" emissiveIntensity={0.9} />
+          <meshStandardMaterial
+            color="#67e8f9"
+            emissive="#22d3ee"
+            emissiveIntensity={0.9}
+          />
         </mesh>
       </group>
     </group>
@@ -59,12 +73,22 @@ export function HeroScene() {
       <fog attach="fog" args={["#09090b", 5, 12]} />
       <PerspectiveCamera makeDefault position={[0, 0, 6]} fov={42} />
       <ambientLight intensity={0.45} />
-      <directionalLight position={[3, 4, 2]} intensity={2.2} castShadow color="#fff7ed" />
+      <directionalLight
+        position={[3, 4, 2]}
+        intensity={2.2}
+        castShadow
+        color="#fff7ed"
+      />
       <pointLight position={[-3, -2, 2]} intensity={16} color="#22d3ee" />
       <pointLight position={[3, 1, -2]} intensity={14} color="#fb7185" />
       <Sparkles count={90} scale={8} size={3} speed={0.6} color="#fff7ed" />
       <EnergyCore />
-      <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.65} />
+      <OrbitControls
+        enableZoom={false}
+        enablePan={false}
+        autoRotate
+        autoRotateSpeed={0.65}
+      />
     </Canvas>
   );
 }
