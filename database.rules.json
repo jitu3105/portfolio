@@ -1,0 +1,10 @@
+{
+  "rules": {
+    "portfolio": {
+      "content": {
+        ".read": true,
+        ".write": true
+      }
+    }
+  }
+}
