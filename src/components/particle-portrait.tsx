@@ -2432,14 +2432,7 @@ export function ParticlePortrait({
           background: #060a17;
           padding-bottom: 12px;
         }
-        .particle-portrait-copy-scroll h1,
-        .particle-portrait-copy-scroll h3 {
-          position: sticky;
-          top: 0px;
-          z-index: 10;
-          background: #060a17;
-          padding-bottom: 12px;
-        }
+
         .particle-portrait-copy-scroll {
           box-sizing: border-box;
           width: 100%;
